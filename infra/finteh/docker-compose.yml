@@ -1,0 +1,112 @@
+version: "3.8"
+services:
+  credit_application_service_db:
+    image: postgres:16.3-alpine
+    container_name: credit_application_service_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: credit
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5451:5432"
+    volumes:
+      - "credit_application_service_db:/var/lib/postgresql/data"
+    networks:
+      - finteh
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d card -U admin" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  kafka_finteh:
+    image: docker.io/bitnami/kafka:latest
+    container_name: kafka_finteh
+    restart: unless-stopped
+    ports:
+      - "9092:9092"  # для внутренних подключений
+      - "9094:9094"  # для внешних подключений с хоста
+    environment:
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_CFG_PROCESS_ROLES=broker,controller
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka_finteh:9093
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka_finteh:9092,EXTERNAL://localhost:9094
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    networks:
+      - finteh
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    ports:
+      - "9093:8080"
+    environment:
+      # ИСПРАВЛЕНО: подключаемся к внутреннему имени контейнера
+      - KAFKA_CLUSTERS_0_BOOTSTRAP_SERVERS=kafka_finteh:9092
+      - KAFKA_CLUSTERS_0_NAME=finteh-cluster
+    networks:
+      - finteh
+    depends_on:
+      - kafka_finteh
+
+  topic-creator:
+    image: docker.io/bitnami/kafka:latest
+    container_name: topic-creator
+    command:
+      - sh
+      - -c
+      - |
+        echo 'Ожидание готовности Kafka...';
+        sleep 15;
+        echo 'Создание топиков...';
+        kafka-topics.sh --create \
+          --topic credit-applications-created \
+          --partitions 3 \
+          --replication-factor 1 \
+          --bootstrap-server kafka_finteh:9092 \
+          --if-not-exists;
+        kafka-topics.sh --create \
+          --topic customer-verification-completed \
+          --partitions 3 \
+          --replication-factor 1 \
+          --bootstrap-server kafka_finteh:9092 \
+          --if-not-exists;
+        kafka-topics.sh --create \
+          --topic scoring-approved \
+          --partitions 3 \
+          --replication-factor 1 \
+          --bootstrap-server kafka_finteh:9092 \
+          --if-not-exists;
+        kafka-topics.sh --create \
+          --topic funds-reservation-completed \
+          --partitions 3 \
+          --replication-factor 1 \
+          --bootstrap-server kafka_finteh:9092 \
+          --if-not-exists;
+        kafka-topics.sh --create \
+          --topic notification-sent \
+          --partitions 3 \
+          --replication-factor 1 \
+          --bootstrap-server kafka_finteh:9092 \
+          --if-not-exists;
+        echo 'Топики созданы.'
+    networks:
+      - finteh
+    depends_on:
+      - kafka_finteh
+
+volumes:
+  credit_application_service_db:
+    name: credit_application_service_db
+  kafka_data:
+    name: kafka_data
+
+networks:
+  finteh:
+    name: finteh
+    driver: bridge

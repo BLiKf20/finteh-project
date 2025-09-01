@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: create_credit_applications.sql
+      relativeToChangelogFile: true
+  - include:
+      file: create_credit_outbox.sql
+      relativeToChangelogFile: true

@@ -1,0 +1,36 @@
+server:
+  port: 9101
+
+spring:
+  application:
+    name:
+      credit-application-service
+  profiles:
+    active: local
+
+  datasource:
+    username: ${DATABASE_USER:postgres}
+    password: ${DATABASE_PASSWORD:postgres}
+    url: jdbc:postgresql://${DATABASE_URL:localhost:5451}/credit
+    driver-class-name: org.postgresql.Driver
+    hikari:
+        connection-timeout: 5000
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        format_sql: true
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.yml
+  kafka:
+    bootstrap-servers: localhost:9094
+    properties:
+      retention.ms: 864000000
+
+
+logging:
+  level:
+    org.hibernate.SQL: INFO
+    org.hibernate.type.descriptor.sql.BasicBinder: INFO
