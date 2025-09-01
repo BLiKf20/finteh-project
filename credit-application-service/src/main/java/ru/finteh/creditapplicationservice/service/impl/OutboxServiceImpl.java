@@ -4,8 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,8 +21,6 @@ import java.util.UUID;
 public class OutboxServiceImpl implements OutboxService {
 
     private final OutboxRepository outboxRepository;
-
-    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     private final OutboxMapper outboxMapper;
     private final ObjectMapper objectMapper;
