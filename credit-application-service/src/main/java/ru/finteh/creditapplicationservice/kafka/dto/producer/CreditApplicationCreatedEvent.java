@@ -14,7 +14,7 @@ import java.util.UUID;
  * @param clientId      - id клиента
  * @param amount        - запрашиваемая сумма
  * @param termMonths    - запрашиваемый период
- * @param createdAt     - дата моздания заявки
+ * @param createdAt     - дата создания заявки
  */
 
 @Schema(description = "Создание заявки")

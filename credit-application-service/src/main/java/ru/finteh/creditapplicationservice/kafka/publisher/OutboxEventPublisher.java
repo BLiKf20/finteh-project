@@ -34,6 +34,7 @@ public class OutboxEventPublisher {
                 Object deserialized = objectMapper.readValue(outboxEvent.getPayload(), Object.class);
                 kafkaTemplate.send(outboxEvent.getTopic(), String.valueOf(outboxEvent.getAggregateId()), deserialized);
                 outboxEvent.setProcessedAt(LocalDateTime.now());
+
                 outboxRepository.save(outboxEvent);
                 log.info("Отправляем сообщение в Kafka: topic={}, id={}", outboxEvent.getTopic(), outboxEvent.getId());
             } catch (Exception e) {
