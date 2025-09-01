@@ -24,8 +24,6 @@ public class OutboxServiceImpl implements OutboxService {
 
     private final OutboxRepository outboxRepository;
 
-    private final KafkaTemplate<String, Object> kafkaTemplate;
-
     private final OutboxMapper outboxMapper;
     private final ObjectMapper objectMapper;
 
