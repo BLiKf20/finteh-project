@@ -3,8 +3,8 @@ package ru.finteh.creditapplicationservice.model.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@AllArgsConstructor
 @Getter
+@AllArgsConstructor
 public enum CreditStatus {
     ACTIVE("Кредит выдан, находится в статусе \"действующий\""),
     CANCELLED("Заявка отменена клиентом или системой (до активации)"),
