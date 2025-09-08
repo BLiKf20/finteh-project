@@ -11,7 +11,7 @@ public record VerificationResultEvent(
     @Schema(description = "Описывает тип доменного события, которое произошло", example = "CREDIT_APPLICATION_CREATED")
     String eventType,
 
-    @Schema(description = "Указывает, какой именно экземпляр агрегата породил событие", example = "app-123")
+    @Schema(description = "Это ключ для SAGA, по которому ты найдёшь заявку и продолжишь обработку.", example = "9f7f4be1-c11d-41f9-acdb-d4068c69f83a")
     UUID aggregateId,
 
     @Schema(description = "Статус валидации клиента", example = "APPROVED")
@@ -23,14 +23,5 @@ public record VerificationResultEvent(
     @Schema(description = "Флаг проверки валидации паспорта", example = "true")
     Boolean passportValid
 ) {
-
-    @Override
-    public String toString() {
-        return "Event_type=" + eventType + "; " +
-            "aggregateId=" + aggregateId + "; " +
-            "ValidationStatus=" + status + "; " +
-            "BlacklistCheck=" + blacklistCheck + "; " +
-            "PassportValid=" + passportValid;
-    }
 
 }

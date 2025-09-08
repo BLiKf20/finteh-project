@@ -21,23 +21,23 @@ import java.util.UUID;
 public record CreditApplicationCreatedEvent(
 
     @Schema(description = "Id заявки на кредит", example = "010b964f-188b-427c-8922-81267997939a")
-    @NotNull(message = "Id заявки на кредит не может быть пустым")
+    @NotNull(message = "Id заявки на кредит не может быть null")
     UUID creditOrderId,
 
     @Schema(description = "Id клиента", example = "e03b1171-20b6-49a9-9c06-bf30ba832fec")
-    @NotNull(message = "Id клиента не может быть пустым")
+    @NotNull(message = "Id клиента не может быть null")
     UUID clientId,
 
     @Schema(description = "Запрашиваемая сумма", example = "210000")
-    @NotNull(message = "Запрашиваемая сумма не может быть пустой")
+    @NotNull(message = "Запрашиваемая сумма не может быть null")
     BigDecimal amount,
 
     @Schema(description = "Запрашиваемый период кредита в месяцах", example = "24")
-    @NotNull(message = "Запрашиваемый период кредита в месяцах не может быть пустым")
+    @NotNull(message = "Запрашиваемый период кредита в месяцах не может быть null")
     Integer termMonths,
 
     @Schema(description = "Дата создания заявки", example = "2025-04-05T10:00:00Z")
-    @NotNull(message = "Дата создания заявки не может быть пустой")
+    @NotNull(message = "Дата создания заявки не может быть null")
     LocalDateTime createdAt
 ) {
 

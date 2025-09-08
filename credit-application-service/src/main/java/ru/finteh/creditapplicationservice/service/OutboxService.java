@@ -8,7 +8,7 @@ public interface OutboxService {
      * Метод для сохранения сообщения в БД перед отправкой
      * @param aggregateType - тип бизнес сущности ("CREDIT_APPLICATION", "ORDER", "CUSTOMER").
      *                      Определяет, к какой бизнес-сущности (агрегату) относится событие.
-     * @param aggregateId   - идентификатор конкретной сущности.
+     * @param aggregateId   - Это ключ для SAGA, по которому ты найдёшь заявку и продолжишь обработку.
      *                     Указывает, какой именно экземпляр агрегата породил событие.
      * @param eventType     - тип события ("CREDIT_APPLICATION_CREATED", "CUSTOMER_VERIFIED", "FUNDS_RESERVED").
      *                      Описывает тип доменного события, которое произошло.

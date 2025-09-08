@@ -85,9 +85,13 @@ public class KafkaConfiguration {
         configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         // Как сериализовать ключ сообщения
         configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        configProps.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class);
         // Как сериализовать тело (value) сообщения
-        configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
+        configProps.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class);
+        configProps.put(JsonDeserializer.TRUSTED_PACKAGES, "ru.finteh.creditapplicationservice.kafka.dto.consumer");
+        //configProps.put(JsonDeserializer.REMOVE_TYPE_INFO_HEADERS, true);
+        //configProps.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, false);
+        //configProps.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "ru.finteh.creditapplicationservice.kafka.dto.consumer.VerificationResultEvent");
         //
         configProps.put(ConsumerConfig.GROUP_ID_CONFIG, "credit-application-service");
 

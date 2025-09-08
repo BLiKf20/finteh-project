@@ -26,7 +26,7 @@ import java.util.UUID;
  * Полезно в системах с несколькими типами агрегатов.
  * Может использоваться в обобщённых обработчиках или UI (например, Kafka UI).
  *
- * aggregate_id         - Идентификатор конкретной сущности
+ * aggregate_id         - Это ключ для SAGA, по которому ты найдёшь заявку и продолжишь обработку.
  * Назначение: Указывает, какой именно экземпляр агрегата породил событие.
  * Зачем:
  * Позволяет связать событие с конкретной заявкой, заказом и т.д.
@@ -88,7 +88,7 @@ public class OutboxEvent {
  * 1. Клиент создаёт заявку → сохраняется в credit_applications
  * 2. В той же транзакции создаётся OutboxEvent:
  *    - aggregateType = "CREDIT_APPLICATION"
- *    - aggregateId = [id заявки]
+ *    - aggregateId = [id заявки] Это ключ для SAGA, по которому ты найдёшь заявку и продолжишь обработку.
  *    - eventType = "CREDIT_APPLICATION_CREATED"
  *    - payload = { ... }
  *    - topic = "credit-applications-created"
