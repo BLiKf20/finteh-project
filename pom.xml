@@ -30,6 +30,7 @@
         <module>payment-service</module>
         <module>loan-management-service</module>
         <module>notification-service</module>
+        <module>user-service</module>
     </modules>
 
     <dependencyManagement>

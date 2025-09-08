@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: alter_client_documents
+      author: Vitaliy Burov
+      changes:
+        - addColumn:
+            tableName: client_documents
+            columns:
+              - column:
+                  name: signable_id
+                  remarks: "Идентификатор документа в системе Aitu"
+                  type: varchar(50)
+              - column:
+                  name: signature
+                  remarks: "Подпись в pkcs7"
+                  type: bytea
+      rollback:
+        - dropColumn:
+            tableName: client_documents
+            columns:
+              - column:
+                  name: signable_id
+              - column:
+                  name: signature

@@ -1,0 +1,61 @@
+databaseChangeLog:
+  - changeSet:
+      id: table_client_documents
+      author: Vitaliy Burov
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: client_documents
+      changes:
+        - createTable:
+            tableName: client_documents
+            remarks: "Документы клиента"
+            columns:
+              - column:
+                  name: id
+                  remarks: "Идентификатор документа"
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: client_id
+                  remarks: "Идентификатор клиента/пользователя"
+                  type: uuid
+              - column:
+                  name: type
+                  remarks: "Тип документа"
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  remarks: "Номер версии документа (В рамка типа документа)"
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: file_data
+                  remarks: "Массив байт сохраненного документа"
+                  type: bytea
+                  constraints:
+                    nullable: false
+              - column:
+                  name: upload_date
+                  remarks: "Дата загрузки документов"
+                  type: timestamp
+                  constraints:
+                    nullable: false
+      rollback:
+        - dropTable:
+            tableName: client_documents
+  - changeSet:
+      id: constraint-add-fkey-client-id
+      author: Vitaliy Burov
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: client_id
+            baseTableName: client_documents
+            constraintName: client_id_fkey
+            referencedTableName: client
+            referencedColumnNames: id

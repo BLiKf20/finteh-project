@@ -1,0 +1,139 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-authorization-type-enum
+      author: Vitaliy Burov
+      changes:
+        - sql:
+            dbms: postgresql
+            splitStatements: false
+            sql: CREATE TYPE AUTHORIZATION_TYPE AS ENUM ('PIN', 'LOGIN');
+      rollback:
+        - sql:
+            stripComments: false
+            sql: DROP TYPE IF EXISTS AUTHORIZATION_TYPE;
+  - changeSet:
+      id: table_user_profile
+      author: Vitaliy Burov
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: user_profile
+      changes:
+        - createTable:
+            tableName: user_profile
+            remarks: "Профиль клиента"
+            columns:
+              - column:
+                  name: id
+                  remarks: "Идентификатор пользовательского профиля"
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: client_id
+                  remarks: "Идентификатор клиента/пользователя"
+                  type: uuid
+              - column:
+                  name: is_sms_enabled
+                  remarks: "sms-уведомление"
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_push_enabled
+                  remarks: "push-уведомление"
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  remarks: "Электронная почта"
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: update_date
+                  remarks: "Дата обновления сущности"
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: create_date
+                  remarks: "Дата регистрации в приложении"
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_email_subscription
+                  remarks: "Почтовая подписка(email-рассылка)"
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password
+                  remarks: "Пароль"
+                  type: varchar(65)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: authorization_pin
+                  remarks: "Пин код для авторизации пользователя в приложении"
+                  type: char(4)
+              - column:
+                  name: authorization_type
+                  remarks: "Тип авторизации пользователя при входе в приложение"
+                  type: authorization_type
+                  defaultValue: 'LOGIN'
+      rollback:
+        - dropTable:
+            tableName: user_profile
+  - changeSet:
+      id: constraint-add-fkey-client-id
+      author: Vitaliy Burov
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: client_id
+            baseTableName: user_profile
+            constraintName: client_id_fkey
+            referencedTableName: client
+            referencedColumnNames: id
+  - changeSet:
+      id: constraint-check-to-email
+      author: Vitaliy Burov
+      changes:
+        - sqlFile:
+            path: db/changelog/v1.0/sql/constraints/add/ddl-add-constraint-check-to-email.sql
+      rollback:
+        - sqlFile:
+            path: db/changelog/v1.0/sql/constraints/drop/ddl-drop-constraint-check-to-email.sql
+  - changeSet:
+      id: constraint-check-to-password
+      author: Vitaliy Burov
+      changes:
+        - sqlFile:
+            path: db/changelog/v1.0/sql/constraints/add/ddl-add-constraint-check-to-password.sql
+      rollback:
+        - sqlFile:
+            path: db/changelog/v1.0/sql/constraints/drop/ddl-drop-constraint-check-to-password.sql
+  - changeSet:
+      id: constraint-check-to-authorization-pin
+      author: Vitaliy Burov
+      changes:
+        - sqlFile:
+            path: db/changelog/v1.0/sql/constraints/add/ddl-add-constraint-check-to-authorization-pin.sql
+      rollback:
+        - sqlFile:
+            path: db/changelog/v1.0/sql/constraints/drop/ddl-drop-constraint-check-to-authorization-pin.sql
+  - changeSet:
+      id: create-in-user-profile-trigger-for-update-date
+      author: Vitaliy Burov
+      changes:
+        - sqlFile:
+            path: db/changelog/v1.0/sql/triggers/add/ddl-add-in-user-profile-trigger-for-update-date.sql
+      rollback:
+        - sqlFile:
+            path: db/changelog/v1.0/sql/triggers/drop/ddl-drop-in-user-profile-trigger-for-update-date.sql

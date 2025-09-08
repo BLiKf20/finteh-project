@@ -1,17 +1,17 @@
 server:
-  port: 9101
+  port: 9100
 
 spring:
   application:
     name:
-      credit-application-service
+      user-service
   profiles:
     active: local
 
   datasource:
     username: ${DATABASE_USER:postgres}
     password: ${DATABASE_PASSWORD:postgres}
-    url: jdbc:postgresql://${DATABASE_URL:localhost:5451}/credit
+    url: jdbc:postgresql://${DATABASE_URL:localhost:5450}/user
     driver-class-name: org.postgresql.Driver
     hikari:
       connection-timeout: 5000
@@ -24,11 +24,6 @@ spring:
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.yml
-  kafka:
-    bootstrap-servers: localhost:9094
-    properties:
-      retention.ms: 864000000
-
 
 logging:
   level:

@@ -1,0 +1,66 @@
+databaseChangeLog:
+  - changeSet:
+      id: table_passport_data
+      author: Vitaliy Burov
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: passport_data
+      changes:
+        - createTable:
+            tableName: passport_data
+            remarks: "Паспортные данные"
+            columns:
+              - column:
+                  name: id
+                  remarks: "Идентификатор данных паспорта"
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: passport_number
+                  remarks: "Номер паспорта"
+                  type: varchar(10)
+              - column:
+                  name: issued_by
+                  remarks: "Кем выдан паспорт"
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: issued_date
+                  remarks: "Дата выпуска"
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: department_code
+                  remarks: "Код подразделения"
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: birth_date
+                  remarks: "Дата рождения"
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: update_date
+                  remarks: "Дата обновления сущности"
+                  type: timestamp
+                  constraints:
+                    nullable: false
+      rollback:
+        - dropTable:
+            tableName: passport_data
+  - changeSet:
+      id: create-in-passport-data-trigger-for-update-date
+      author: Vitaliy Burov
+      changes:
+        - sqlFile:
+            path: db/changelog/v1.0/sql/triggers/add/ddl-add-in-passport-data-trigger-for-update-date.sql
+      rollback:
+        - sqlFile:
+            path: db/changelog/v1.0/sql/triggers/drop/ddl-drop-in-passport-data-trigger-for-update-date.sql

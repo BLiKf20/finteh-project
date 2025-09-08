@@ -1,0 +1,98 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-status-order-enum
+      author: Vitaliy Burov
+      changes:
+        - sql:
+            dbms: postgresql
+            splitStatements: false
+            sql: CREATE TYPE STATUS_ORDER AS ENUM('IN_PROCESSING', 'REJECTED', 'APPROVED');
+      rollback:
+        - sql:
+            splitStatements: false
+            sql: DROP TYPE IF EXISTS STATUS_ORDER;
+  - changeSet:
+      id: table_user_order
+      author: Vitaliy Burov
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: user_order
+      changes:
+        - createTable:
+            tableName: user_order
+            remarks: "Заявка на изменение ФИО"
+            columns:
+              - column:
+                  name: id
+                  remarks: "Идентификатор заявки на изменение ФИО"
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: client_documents_id
+                  remarks: "Идентификатор связанного документа"
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reason
+                  remarks: "Причина смена данных ФИО"
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status_order
+                  remarks: "Статус заявки"
+                  type: status_order
+              - column:
+                  name: first_name
+                  remarks: "Имя"
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_name
+                  remarks: "Фамилия"
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: middle_name
+                  remarks: "Отчество"
+                  type: varchar(30)
+              - column:
+                  name: create_date
+                  remarks: "Дата создания записи"
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: update_date
+                  remarks: "Дата обновления записи"
+                  type: timestamp
+                  constraints:
+                    nullable: false
+      rollback:
+        - dropTable:
+            tableName: user_order
+  - changeSet:
+      id: constraint-add-fkey-client-documents-id
+      author: Vitaliy Burov
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: client_documents_id
+            baseTableName: user_order
+            constraintName: client_documents_id_fkey
+            referencedTableName: client_documents
+            referencedColumnNames: id
+  - changeSet:
+      id: create-in-user-order-trigger-for-update-date
+      author: Vitaliy Burov
+      changes:
+        - sqlFile:
+            path: db/changelog/v1.0/sql/triggers/add/ddl-add-in-user-order-trigger-for-update-date.sql
+      rollback:
+        - sqlFile:
+            path: db/changelog/v1.0/sql/triggers/drop/ddl-drop-in-user-order-trigger-for-update-date.sql

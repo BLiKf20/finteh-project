@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-test-data
+      author: Vitaliy Burov
+      changes:
+        - sqlFile:
+            path: db/changelog/v1.0/sql/test/test.sql

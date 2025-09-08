@@ -1,0 +1,32 @@
+#Version 1.0
+databaseChangeLog:
+  - include:
+      file: v1.0/01-ddl-moddatetime.yml
+      relativeToChangelogFile: true
+  - include:
+      file: v1.0/02-ddl-table-address.yml
+      relativeToChangelogFile: true
+  - include:
+      file: v1.0/03-ddl-table-passport-data.yml
+      relativeToChangelogFile: true
+  - include:
+      file: v1.0/04-ddl-table-client.yml
+      relativeToChangelogFile: true
+  - include:
+      file: v1.0/05-ddl-table-user-profile.yml
+      relativeToChangelogFile: true
+  - include:
+      file: v1.0/06-ddl-table-client-documents.yml
+      relativeToChangelogFile: true
+  - include:
+      file: v1.0/07-ddl-table-user-order.yml
+      relativeToChangelogFile: true
+  - include:
+      file: v1.0/08-ddl-add-test-data.yml
+      relativeToChangelogFile: true
+  - include:
+      file: v1.0/09-ddl-table-user-profile-add-field.yml
+      relativeToChangelogFile: true
+  - include:
+      file: v1.0/10-ddl-table-client-documents-add-field.yml
+      relativeToChangelogFile: true

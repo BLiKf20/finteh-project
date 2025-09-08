@@ -15,7 +15,27 @@ services:
     networks:
       - finteh
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -d card -U admin" ]
+      test: [ "CMD-SHELL", "pg_isready -d credit -U admin" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  user_service_db:
+    image: postgres:16.3-alpine
+    container_name: user_service_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: user
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5450:5432"
+    volumes:
+      - "user_service_db:/var/lib/postgresql/data"
+    networks:
+      - finteh
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d user -U admin" ]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -121,6 +141,8 @@ services:
 volumes:
   credit_application_service_db:
     name: credit_application_service_db
+  user_service_db:
+    name: user_service_db
   kafka_data:
     name: kafka_data
 

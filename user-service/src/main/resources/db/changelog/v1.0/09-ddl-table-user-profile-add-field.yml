@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: alter_user_profile
+      author: Vitaliy Burov
+      changes:
+        - addColumn:
+            tableName: user_profile
+            columns:
+              - column:
+                  name: profile_picture
+                  remarks: "Массив байт сохраняемого изображения"
+                  type: bytea
+      rollback:
+        - dropColumn:
+            tableName: user_profile
+            columnName: profile_picture
