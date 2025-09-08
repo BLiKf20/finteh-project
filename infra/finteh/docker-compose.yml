@@ -77,19 +77,37 @@ services:
           --bootstrap-server kafka_finteh:9092 \
           --if-not-exists;
         kafka-topics.sh --create \
-          --topic scoring-approved \
+          --topic loan-created \
           --partitions 3 \
           --replication-factor 1 \
           --bootstrap-server kafka_finteh:9092 \
           --if-not-exists;
         kafka-topics.sh --create \
-          --topic funds-reservation-completed \
+          --topic loan-repayment-requested \
+          --partitions 3 \
+          --replication-factor 1 \
+          --bootstrap-server kafka_finteh:9092 \
+          --if-not-exists;
+        kafka-topics.sh --create \
+          --topic scoring-result \
+          --partitions 3 \
+          --replication-factor 1 \
+          --bootstrap-server kafka_finteh:9092 \
+          --if-not-exists;
+        kafka-topics.sh --create \
+          --topic funds-reservation-result \
           --partitions 3 \
           --replication-factor 1 \
           --bootstrap-server kafka_finteh:9092 \
           --if-not-exists;
         kafka-topics.sh --create \
           --topic notification-sent \
+          --partitions 3 \
+          --replication-factor 1 \
+          --bootstrap-server kafka_finteh:9092 \
+          --if-not-exists;
+        kafka-topics.sh --create \
+          --topic scoring-pending-manual-review \
           --partitions 3 \
           --replication-factor 1 \
           --bootstrap-server kafka_finteh:9092 \
